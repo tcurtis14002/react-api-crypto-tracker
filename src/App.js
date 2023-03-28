@@ -2,58 +2,84 @@ import { React, useState, useEffect } from "react";
 import axios from "axios";
 import "./App.css";
 import Coin from "./Coin";
+import { FaGithub } from "react-icons/fa";
+import { CgDarkMode } from "react-icons/cg";
 
 function App() {
-  const [coins, setCoins] = useState([]);
-  const [search, setSearch] = useState("");
+	const [coins, setCoins] = useState([]);
+	const [search, setSearch] = useState("");
+	const [theme, setTheme] = useState("dark");
 
-  useEffect(() => {
-    axios
-      .get(
-        "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=100&page=1&sparkline=false"
-      )
-      .then((response) => {
-        setCoins(response.data);
-      });
-  }, []);
+	useEffect(() => {
+		axios
+			.get(
+				"https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=100&page=1&sparkline=false"
+			)
+			.then((response) => {
+				setCoins(response.data);
+			});
+	});
 
-  const handleChange = (e) => {
-    setSearch(e.target.value);
-  };
+	const handleChange = (e) => {
+		setSearch(e.target.value);
+	};
 
-  const filteredCoins = coins.filter((coin) =>
-    coin.name.toLowerCase().includes(search.toLowerCase())
-  );
+	const switchTheme = () => {
+		const newTheme = theme === "light" ? "dark" : "light";
+		setTheme(newTheme);
+	};
 
-  return (
-    <div className="coin-app">
-      <div className="coin-search">
-        <h1 className="coin-text">Search a currency</h1>
-        <form>
-          <input
-            type="text"
-            placeholder="Search"
-            className="coin-input"
-            onChange={handleChange}
-          />
-        </form>
-      </div>
-      {filteredCoins.map((coin) => {
-        return (
-          <Coin
-            key={coin.id}
-            name={coin.name}
-            price={coin.current_price}
-            priceChange={coin.price_change_percentage_24h}
-            image={coin.image}
-            symbol={coin.symbol}
-            volume={coin.total_volume}
-            marketCap={coin.market_cap}
-          />
-        );
-      })}
-    </div>
-  );
+	const filteredCoins = coins.filter((coin) =>
+		coin.name.toLowerCase().includes(search.toLowerCase())
+	);
+
+	return (
+		<div
+			className='coin-app'
+			// data-theme={theme}
+		>
+			<header>
+				<div className='github-link'>
+					<a href='https://github.com/tcurtis14002/react-api-crypto-tracker'>
+						<FaGithub />
+					</a>
+				</div>
+				<div>
+					<button className='theme-btn'>
+						<CgDarkMode
+							onClick={switchTheme}
+							className='light-theme-btn'
+						/>
+					</button>
+				</div>
+			</header>
+			<div className='coin-search'>
+				<h1 className='coin-text'>Search a currency</h1>
+				<form>
+					<input
+						type='text'
+						placeholder='Search'
+						className='coin-input'
+						onChange={handleChange}
+					/>
+				</form>
+			</div>
+			{filteredCoins.map((coin) => {
+				return (
+					<Coin
+						key={coin.id}
+						name={coin.name}
+						price={coin.current_price}
+						priceChange={coin.price_change_percentage_24h}
+						image={coin.image}
+						symbol={coin.symbol}
+						volume={coin.total_volume}
+						marketCap={coin.market_cap}
+					/>
+				);
+			})}
+		</div>
+	);
 }
 
 export default App;
