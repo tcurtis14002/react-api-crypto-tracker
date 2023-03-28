@@ -2,13 +2,10 @@ import { React, useState, useEffect } from "react";
 import axios from "axios";
 import "./App.css";
 import Coin from "./Coin";
-import { FaGithub } from "react-icons/fa";
-import { CgDarkMode } from "react-icons/cg";
 
 function App() {
 	const [coins, setCoins] = useState([]);
 	const [search, setSearch] = useState("");
-	const [theme, setTheme] = useState("dark");
 
 	useEffect(() => {
 		axios
@@ -18,15 +15,10 @@ function App() {
 			.then((response) => {
 				setCoins(response.data);
 			});
-	});
+	}, []);
 
 	const handleChange = (e) => {
 		setSearch(e.target.value);
-	};
-
-	const switchTheme = () => {
-		const newTheme = theme === "light" ? "dark" : "light";
-		setTheme(newTheme);
 	};
 
 	const filteredCoins = coins.filter((coin) =>
@@ -34,25 +26,7 @@ function App() {
 	);
 
 	return (
-		<div
-			className='coin-app'
-			// data-theme={theme}
-		>
-			<header>
-				<div className='github-link'>
-					<a href='https://github.com/tcurtis14002/react-api-crypto-tracker'>
-						<FaGithub />
-					</a>
-				</div>
-				<div>
-					<button className='theme-btn'>
-						<CgDarkMode
-							onClick={switchTheme}
-							className='light-theme-btn'
-						/>
-					</button>
-				</div>
-			</header>
+		<div className='coin-app'>
 			<div className='coin-search'>
 				<h1 className='coin-text'>Search a currency</h1>
 				<form>
